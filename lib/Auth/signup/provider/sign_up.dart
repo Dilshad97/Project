@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 class SignUpProvider extends ChangeNotifier {
   String _uid;
   String _email;
-  String _name;
 
   String get getUID => _uid;
 
   String get getEmail => _email;
-
-  String get getName => _name;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
 

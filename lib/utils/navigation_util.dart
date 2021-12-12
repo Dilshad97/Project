@@ -1,3 +1,4 @@
+import 'package:demoproject/Auth/forget_password/ui/forget_pass.dart';
 import 'package:demoproject/Auth/signup/ui/sign_up_screen.dart';
 import 'package:demoproject/home/home_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +16,8 @@ class NavigationUtil {
         return CupertinoPageRoute(
           builder: (context) => SignUp(),
         );
+      case resetpassword:
+        return CupertinoPageRoute(builder: (context) => ForgetPassword(),);
       default:
         return _errorRoute("Coming soon");
     }

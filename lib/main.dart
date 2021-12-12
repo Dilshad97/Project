@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'Auth/Login/ui/login_screen.dart';
+import 'Auth/forget_password/provider/forget_provider.dart';
 
 void main() {
   setupLocator();
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
         ),
         ListenableProvider(
           create: (context) =>  SignUpProvider(),
+        ),
+        ListenableProvider(
+          create: (context) =>  ForgetPasswordProvider(),
         ),
 
       ],

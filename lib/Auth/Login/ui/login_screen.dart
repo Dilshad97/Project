@@ -19,8 +19,9 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   TextEditingController emailcontroller = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   TextEditingController passwordcontroller = TextEditingController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -70,16 +71,19 @@ class _LoginState extends State<Login> {
                                 color: ColorConstants.red,
                                 fontSize: 27,
                                 fontWeight: FontWeight.bold)),
+
                         /// Login TextFiend
                         _loginTextField(),
                         SizedBox(
                           height: 15,
                         ),
+
                         /// login Button
                         _loginButton(context, height, width),
                         SizedBox(
                           height: 15,
                         ),
+
                         ///forget password
                         _foregtPassButton(),
                         SizedBox(
@@ -89,6 +93,7 @@ class _LoginState extends State<Login> {
                         SizedBox(
                           height: 5,
                         ),
+
                         /// socical login
                         Padding(
                           padding: EdgeInsets.only(left: 75, right: 75, top: 8),
@@ -102,6 +107,7 @@ class _LoginState extends State<Login> {
                         SizedBox(
                           height: 5,
                         ),
+
                         /// register button
                         _registerButton(height, width, context)
                       ],
@@ -138,8 +144,12 @@ class _LoginState extends State<Login> {
   Widget _loginButton(BuildContext context, double height, double width) {
     return InkWell(
       onTap: () {
-        Methods()
-            .loginUser(emailcontroller.text, passwordcontroller.text, context);
+        if (_formKey.currentState.validate()) {
+          return Methods().loginUser(
+              emailcontroller.text, passwordcontroller.text, context);
+        } else {
+          return showInSnackBar("Invalid Email/Password");
+        }
       },
       child: _widgetContainer(
         height / 1.4,
@@ -160,7 +170,9 @@ class _LoginState extends State<Login> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            locator<NavigationUtil>().push(context, resetpassword);
+          },
           child:
               _widgetText('Forget Password ||', TextStyle(color: Colors.blue)),
         ),
@@ -225,4 +237,9 @@ class _LoginState extends State<Login> {
           child: Center(child: _widgetText));
 
   _widgetText(String text, TextStyle style) => Text(text, style: style);
+
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState
+        .showSnackBar(new SnackBar(content: new Text(value)));
+  }
 }

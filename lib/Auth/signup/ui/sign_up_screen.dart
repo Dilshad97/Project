@@ -116,11 +116,11 @@ class _SignUpState extends State<SignUp> {
         onPressed: () {
           print('tap');
           String pass = passwordcontroller.text;
-          if(_formKey.currentState.validate()){
-          SignupMethod()
-              .signup(emailcontroller.text, passwordcontroller.text, context);
+          String confirmpass = confirmpasswordcontroller.text;
+          if(_formKey.currentState.validate() && pass==confirmpass){
+          SignupMethod().signup(emailcontroller.text, passwordcontroller.text, context);
         }else{
-            return SignupMethod().showInSnackBar("Password not Matched");
+            return showInSnackBar("Password not matched");
           }},
         child: _widgetText(
             "SIGNUP", TextStyle(fontWeight: FontWeight.bold, fontSize: 16)));
