@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1076462267965",
+    "project_id": "eglairance",
+    "storage_bucket": "eglairance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076462267965:android:25faec91fb3678f04d8454",
+        "android_client_info": {
+          "package_name": "com.example.demoproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076462267965-j41mdrcmfpsis9rfdfp9dtkup9kjdks3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.demoproject",
+            "certificate_hash": "7f5d714a2043f0a00baf9baaf2232ce05f947396"
+          }
+        },
+        {
+          "client_id": "1076462267965-ha4besq81kl758hdt9qrdcm3bb09u9cm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5TyRenExIhkI3zXgF0PEqOrF5OPX5t8A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076462267965-ha4besq81kl758hdt9qrdcm3bb09u9cm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

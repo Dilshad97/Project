@@ -1,9 +1,16 @@
-
+import 'package:demoproject/Auth/Login/provider/login_provider.dart';
+import 'package:demoproject/Auth/signup/provider/sign_up.dart';
+import 'package:demoproject/utils/locator.dart';
+import 'package:demoproject/utils/navigation_util.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-import 'Screens/login_screen.dart';
+import 'package:provider/provider.dart';
+import 'Auth/Login/ui/login_screen.dart';
 
 void main() {
+  setupLocator();
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -11,14 +18,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
+    return MultiProvider(
+      providers: [
+        ListenableProvider(
+          create: (context) =>  LoginProvider(),
+        ),
+        ListenableProvider(
+          create: (context) =>  SignUpProvider(),
+        ),
 
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ],
+      child: MaterialApp(
+        onGenerateRoute: NavigationUtil().generateRoute,
+        // theme: ThemeData(
+        //   primarySwatch: Colors.blue,
+        //   visualDensity: VisualDensity.adaptivePlatformDensity,
+        // ),
+        home: Login(),
       ),
-      home: Login(),
     );
   }
 }
