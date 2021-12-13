@@ -32,6 +32,8 @@ dependencies:
   provider:
   firebase_core:
   firebase_auth:
+  drawer_swipe:
+  cloud_firestore:
 
 
 dev_dependencies:

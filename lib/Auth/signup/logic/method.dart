@@ -7,11 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SignupMethod {
-  void signup(String email, String password, BuildContext context) async {
+  void signup(
+      String email,
+      String password,
+      String passwordcontroller,
+      String firstnamecontroller,
+      String lastnamecontroller,
+      String emailcontroller,
+      BuildContext context) async {
     SignUpProvider signUpProvider =
         Provider.of<SignUpProvider>(context, listen: false);
     try {
-      if (await signUpProvider.signup(email, password)) {
+      if (await signUpProvider.signup(email, passwordcontroller, firstnamecontroller,
+          lastnamecontroller, emailcontroller)) {
         locator<NavigationUtil>().push(context, login);
       }
     } catch (e) {

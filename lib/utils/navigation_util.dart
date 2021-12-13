@@ -1,6 +1,6 @@
 import 'package:demoproject/Auth/forget_password/ui/forget_pass.dart';
 import 'package:demoproject/Auth/signup/ui/sign_up_screen.dart';
-import 'package:demoproject/home/home_screen.dart';
+import 'package:demoproject/home/ui/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

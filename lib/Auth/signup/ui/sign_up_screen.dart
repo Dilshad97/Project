@@ -1,5 +1,6 @@
 import 'package:demoproject/Auth/signup/logic/method.dart';
-import 'package:demoproject/home/home_screen.dart';
+import 'package:demoproject/Auth/signup/provider/sign_up.dart';
+import 'package:demoproject/home/ui/home_screen.dart';
 import 'package:demoproject/utils/locator.dart';
 import 'package:demoproject/utils/navigation_const.dart';
 import 'package:demoproject/utils/navigation_util.dart';
@@ -7,6 +8,7 @@ import 'package:demoproject/widgets/container.dart';
 import 'package:demoproject/widgets/textfield_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key key}) : super(key: key);
@@ -66,6 +68,24 @@ class _SignUpState extends State<SignUp> {
     ));
   }
 
+
+  void signup(
+      String email,
+      String password,
+      BuildContext context) async {
+    SignUpProvider signUpProvider =
+    Provider.of<SignUpProvider>(context, listen: false);
+    try {
+      if (await signUpProvider.signup(email, passwordcontroller.text, firstnamecontroller.text,
+          lastnamecontroller.text, emailcontroller.text)) {
+        locator<NavigationUtil>().push(context, login);
+      }
+    } catch (e) {
+      print('///User SignUp Failed');
+    }
+  }
+
+
   Widget _Textfield(BuildContext context) {
     return Column(
       children: [
@@ -117,8 +137,10 @@ class _SignUpState extends State<SignUp> {
           print('tap');
           String pass = passwordcontroller.text;
           String confirmpass = confirmpasswordcontroller.text;
+
           if(_formKey.currentState.validate() && pass==confirmpass){
-          SignupMethod().signup(emailcontroller.text, passwordcontroller.text, context);
+            signup(emailcontroller.text,passwordcontroller.text,context);
+          // SignupMethod().signup(email.,password,firstnamecontroller.text,emailcontroller.text, passwordcontroller.text, context);
         }else{
             return showInSnackBar("Password not matched");
           }},
