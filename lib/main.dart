@@ -22,22 +22,18 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ListenableProvider(
-          create: (context) =>  LoginProvider(),
+          create: (context) => LoginProvider(),
         ),
         ListenableProvider(
-          create: (context) =>  SignUpProvider(),
+          create: (context) => SignUpProvider(),
         ),
         ListenableProvider(
-          create: (context) =>  ForgetPasswordProvider(),
+          create: (context) => ForgetPasswordProvider(),
         ),
-
       ],
       child: MaterialApp(
         onGenerateRoute: NavigationUtil().generateRoute,
-        // theme: ThemeData(
-        //   primarySwatch: Colors.blue,
-        //   visualDensity: VisualDensity.adaptivePlatformDensity,
-        // ),
+        debugShowCheckedModeBanner: false,
         home: Login(),
       ),
     );

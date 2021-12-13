@@ -1,3 +1,4 @@
+import 'package:demoproject/Auth/Login/ui/login_screen.dart';
 import 'package:demoproject/Auth/forget_password/ui/forget_pass.dart';
 import 'package:demoproject/Auth/signup/ui/sign_up_screen.dart';
 import 'package:demoproject/home/ui/home_screen.dart';
@@ -17,7 +18,14 @@ class NavigationUtil {
           builder: (context) => SignUp(),
         );
       case resetpassword:
-        return CupertinoPageRoute(builder: (context) => ForgetPassword(),);
+        return CupertinoPageRoute(
+          builder: (context) => ForgetPassword(),
+        );
+      case logout:
+        return CupertinoPageRoute(
+          builder: (context) => Login(),
+        );
+
       default:
         return _errorRoute("Coming soon");
     }
@@ -26,6 +34,22 @@ class NavigationUtil {
   Future<dynamic> push(BuildContext context, String routeName,
       {Object arguments}) {
     return Navigator.of(context).pushNamed(routeName, arguments: arguments);
+  }
+
+  void pushReplacement(BuildContext context, String routeName,
+      {Object arguments}) {
+    Navigator.of(context).pushReplacementNamed(routeName, arguments: arguments);
+  }
+
+  void pop(BuildContext context, {dynamic args}) {
+    Navigator.of(context).pop(args);
+  }
+
+  Future<dynamic> pushAndRemoveUntil(BuildContext context, String routeName,
+      {Object arguments}) {
+    return Navigator.of(context).pushNamedAndRemoveUntil(
+        routeName, (route) => false,
+        arguments: arguments);
   }
 
   Route<dynamic> _errorRoute(String message) {
