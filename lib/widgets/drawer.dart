@@ -127,7 +127,7 @@ class CustomDrawer extends StatelessWidget {
                 ],
               );
             }
-            return Center(child: Text("Loading"));
+            return Center(child:CircularProgressIndicator());
           }),
     );
   }
