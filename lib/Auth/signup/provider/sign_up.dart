@@ -41,4 +41,10 @@ class SignUpProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+
+
+
+
+
 }

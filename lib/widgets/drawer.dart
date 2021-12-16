@@ -137,7 +137,8 @@ class CustomDrawer extends StatelessWidget {
       FirebaseAuth _auth = FirebaseAuth.instance;
       await _auth.signOut();
       await _auth.authStateChanges();
+      };
       locator<NavigationUtil>().pushReplacement(context, logout);
     }
   }
-}
+

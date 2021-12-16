@@ -20,7 +20,7 @@ class LoginProvider extends ChangeNotifier {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: emailcontroller, password: passwordcontroller);
 
-      if (userCredential.user != null) {
+      if (userCredential.user == null) {
         _uid = userCredential.user.uid;
         _email = userCredential.user.email;
         _name = userCredential.user.displayName;

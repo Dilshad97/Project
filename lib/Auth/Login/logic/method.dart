@@ -11,8 +11,6 @@ import 'package:provider/provider.dart';
 class Methods {
 
 
-  FirebaseAuth _Auth =FirebaseAuth.instance;
-
 
   void loginUser(String emailcontroller, String passwordcontroller,
       BuildContext context) async {
