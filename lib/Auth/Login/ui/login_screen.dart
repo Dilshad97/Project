@@ -1,17 +1,13 @@
 import 'package:demoproject/Auth/Login/logic/method.dart';
-import 'package:demoproject/Auth/Login/provider/login_provider.dart';
 import 'package:demoproject/utils/color_constants.dart';
 import 'package:demoproject/utils/locator.dart';
 import 'package:demoproject/utils/navigation_const.dart';
 import 'package:demoproject/utils/navigation_util.dart';
 import 'package:demoproject/widgets/container.dart';
 import 'package:demoproject/widgets/textfield_widget.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '';
 
 class Login extends StatefulWidget {
   const Login({Key key}) : super(key: key);

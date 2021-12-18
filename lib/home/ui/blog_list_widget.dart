@@ -1,12 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:demoproject/Model/blog_model.dart';
+import 'package:demoproject/Model/blog_model.dart';
+import 'package:demoproject/Model/user_model.dart';
+import 'package:demoproject/Res/res_users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BlogList extends StatefulWidget {
-  const BlogList({Key key, this.snapshot, this.docId}) : super(key: key);
+  const BlogList({
+    Key key,
+    this.snapshot,
+    this.docId,
+    this.isSwitched,
+  }) : super(key: key);
   final QueryDocumentSnapshot snapshot;
   final String docId;
+  final bool isSwitched;
 
   @override
   _BlogListState createState() => _BlogListState();
@@ -19,14 +29,24 @@ class _BlogListState extends State<BlogList> {
 
   Map<String, dynamic> userData;
 
+  final Res resUsers = Res();
+
+  Users users;
+
   @override
   initState() {
     super.initState();
     setData();
+    setUsers();
   }
 
-  void setData() async {
-    await userdataref.doc(_auth.currentUser.uid).get().then((value) {
+  Future<void> setUsers() async {
+    users = await resUsers.getAllUsersData();
+    setState(() {});
+  }
+
+  Future<void> setData() async {
+    return await userdataref.doc(_auth.currentUser.uid).get().then((value) {
       userData = value.data();
     });
   }
@@ -108,56 +128,7 @@ class _BlogListState extends State<BlogList> {
                         }
                         if (snapshot.hasData) {
                           var myList = snapshot.data.docs.length;
-                          return ListView.separated(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: 1,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text("Tap to view comments"),
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) {
-                                      return SingleChildScrollView(
-                                        child: Column(
-                                          children: [
-                                            ListView.separated(
-                                              shrinkWrap: true,
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              itemCount: myList,
-                                              itemBuilder: (context, index) {
-                                                return ListTile(
-                                                  title: Text(widget
-                                                      .snapshot["Author"]),
-                                                  subtitle: Text(snapshot.data
-                                                      .docs[index]['comments']),
-                                                );
-                                              },
-                                              separatorBuilder:
-                                                  (context, index) {
-                                                return Divider(
-                                                  height: 2,
-                                                  thickness: 2,
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return Divider(
-                                height: 2,
-                                thickness: 2,
-                              );
-                            },
-                          );
+                          return buildListView(myList, snapshot, users);
                         }
                         return Center(child: CircularProgressIndicator());
                       },
@@ -186,49 +157,135 @@ class _BlogListState extends State<BlogList> {
     );
   }
 
-  like(String docId) async {
-    CollectionReference blog = FirebaseFirestore.instance.collection('blog');
-    await blog
-        .doc(docId)
-        .update(
-          {
-            'like': 2,
+  ListView buildListView(
+      int myList, AsyncSnapshot<QuerySnapshot> snapshot, Users users) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: 1,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text("Tap to view comments"),
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: myList,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(widget.snapshot["Author"]),
+                            subtitle:
+                                Text(snapshot.data.docs[index]['comments']),
+                            leading: Text(users.image),
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            height: 2,
+                            thickness: 2,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
           },
-        )
-        .then((value) => print("///Comment saved "))
-        .catchError((error) {
-          print("/// error in saving $error");
-        });
+        );
+      },
+      separatorBuilder: (context, index) {
+        return Divider(
+          height: 2,
+          thickness: 2,
+        );
+      },
+    );
+  }
+
+  like(String docId) async {
+    if (widget.isSwitched != true) {
+      CollectionReference blog = FirebaseFirestore.instance.collection('blog');
+      await blog
+          .doc(docId)
+          .update(
+            {
+              'like': 2,
+            },
+          )
+          .then((value) => print("///Comment saved "))
+          .catchError((error) {
+            print("/// error in saving $error");
+          });
+    } else {
+      CollectionReference blog =
+          FirebaseFirestore.instance.collection('sports');
+      await blog
+          .doc(docId)
+          .update(
+            {
+              'like': 2,
+            },
+          )
+          .then((value) => print("///Comment saved "))
+          .catchError((error) {
+            print("/// error in saving $error");
+          });
+    }
   }
 
   dislike(String docId) async {
-    CollectionReference blog = FirebaseFirestore.instance.collection('blog');
-    await blog
-        .doc(docId)
-        .update(
-          {
-            'like': 1,
-          },
-        )
-        .then((value) => print("///Comment saved "))
-        .catchError((error) {
-          print("/// error in saving $error");
-        });
+    if (widget.isSwitched != true) {
+      CollectionReference blog = FirebaseFirestore.instance.collection('blog');
+
+      await blog
+          .doc(docId)
+          .update(
+            {
+              'like': 1,
+            },
+          )
+          .then((value) => print("///Comment saved "))
+          .catchError((error) {
+            print("/// error in saving $error");
+          });
+    } else {
+      CollectionReference blog =
+          FirebaseFirestore.instance.collection('sports');
+
+      await blog
+          .doc(docId)
+          .update(
+            {
+              'like': 1,
+            },
+          )
+          .then((value) => print("///Comment saved "))
+          .catchError((error) {
+            print("/// error in saving $error");
+          });
+    }
   }
 
   likeBlogUpdate(String blogTittle) async {
     CollectionReference likeBlogUpdate =
         FirebaseFirestore.instance.collection('user');
-
+    await setData();
     FirebaseAuth _auth = FirebaseAuth.instance;
-    userData = <String, dynamic>{
+    var newData = <String, dynamic>{
       ...userData,
       "likedBlog": [...userData['likedBlog'], blogTittle],
     };
 
     await likeBlogUpdate
         .doc(_auth.currentUser.uid)
-        .set(userData)
+        .set(newData)
         .then((value) => print("/// user save to firebase"))
         .catchError((error) => print("///user added failed to firebase$error"));
   }
@@ -238,6 +295,9 @@ class _BlogListState extends State<BlogList> {
         FirebaseFirestore.instance.collection('user');
 
     FirebaseAuth _auth = FirebaseAuth.instance;
+
+    await setData();
+
     var list = userData['likedBlog'] as List;
     list.removeWhere((element) => element == blogTittle);
     Map data = <String, dynamic>{

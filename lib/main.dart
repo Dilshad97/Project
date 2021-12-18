@@ -1,5 +1,6 @@
 import 'package:demoproject/Auth/Login/provider/login_provider.dart';
 import 'package:demoproject/Auth/signup/provider/sign_up.dart';
+import 'package:demoproject/home/ui/home_screen.dart';
 import 'package:demoproject/utils/color_constants.dart';
 import 'package:demoproject/utils/locator.dart';
 import 'package:demoproject/utils/navigation_util.dart';

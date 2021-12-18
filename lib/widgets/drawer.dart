@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoproject/Auth/signup/provider/sign_up.dart';
+import 'package:demoproject/Res/res_users.dart';
 import 'package:demoproject/utils/color_constants.dart';
 import 'package:demoproject/utils/locator.dart';
 import 'package:demoproject/utils/navigation_const.dart';
@@ -13,6 +14,8 @@ class CustomDrawer extends StatelessWidget {
 
   const CustomDrawer({Key key, this.closeDrawer}) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -22,6 +25,8 @@ class CustomDrawer extends StatelessWidget {
     CollectionReference reference =
         FirebaseFirestore.instance.collection('user');
     String documentId = FirebaseAuth.instance.currentUser.uid;
+
+
 
     return Container(
       color: ColorConstants.red,

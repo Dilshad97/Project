@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:demoproject/Model/blog_model.dart';
+import 'package:demoproject/Model/user_model.dart';
+import 'package:demoproject/Res/res_users.dart';
 import 'package:demoproject/utils/color_constants.dart';
 import 'package:demoproject/home/ui/blog_list_widget.dart';
 import 'package:demoproject/widgets/drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
-
 
 class Home extends StatefulWidget {
   const Home({Key key}) : super(key: key);
@@ -17,9 +20,54 @@ class _HomeState extends State<Home> {
   TextEditingController commentController = TextEditingController();
 
   CollectionReference blog = FirebaseFirestore.instance.collection('blog');
+  var documentId = FirebaseAuth.instance.currentUser.uid;
+
+  CollectionReference sports = FirebaseFirestore.instance.collection('sports');
+
+  bool isSwitched = false;
+
+  final Res resUsers = Res();
+
+  List<BlogModel> blogModel;
+// List  list=[];
+//
+//   BlogModel model;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setBlogData();
+    // tojson();
+  }
+
+
+  //
+  //  tojson()async{
+  // final jsonadata=   await model.toJson();
+  // print("////$jsonadata");
+  //
+  // list.add(jsonadata);
+  // print(list);
+  //  }
+
+
+
+
+  Future<void> setBlogData() async {
+    blogModel = await resUsers.getAllBlogData();
+    setState(() {});
+  }
+
+  void toggleSwitch(bool value) {
+    setState(() {
+      isSwitched = value;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
           backgroundColor: ColorConstants.red.shade300,
@@ -27,6 +75,16 @@ class _HomeState extends State<Home> {
           appBar: AppBar(
             title: Text("My Blog"),
             backgroundColor: ColorConstants.red,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(top: 18),
+                child: Text('Sports'),
+              ),
+              Switch(
+                onChanged: toggleSwitch,
+                value: isSwitched,
+              )
+            ],
           ),
           drawer: CustomDrawer(),
           body: Column(
@@ -34,7 +92,7 @@ class _HomeState extends State<Home> {
             children: [
               Container(
                   child: StreamBuilder<QuerySnapshot>(
-                      stream: blog.snapshots(),
+                      stream: isSwitched ? sports.snapshots() : blog.snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return Text("Something went wrong");
@@ -43,18 +101,24 @@ class _HomeState extends State<Home> {
                           var data = snapshot.data.docs.length;
                           return Expanded(
                             child: ListView.builder(
-                              itemCount: data,
+                              itemCount: blogModel?.length??0,
                               itemBuilder: (context, index) {
                                 final docId = snapshot.data.docs[index].id;
-                                return BlogList(
-                                  snapshot: snapshot.data.docs[index],
-                                  docId: docId,
+                                return Column(
+                                  children: [
+                                    BlogList(
+                                      snapshot: snapshot.data.docs[index],
+                                      docId: docId,
+                                      isSwitched: isSwitched,
+
+                                    ),
+                                  ],
                                 );
                               },
                             ),
                           );
                         }
-                        return CircularProgressIndicator();
+                        return Center(child: CircularProgressIndicator());
                       }))
             ],
           )),
