@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoproject/Model/blog_model.dart';
+import 'package:demoproject/Model/sports_blog_model.dart';
 import 'package:demoproject/Model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -21,7 +22,8 @@ class Res {
   }
 
   Future<List<BlogModel>> getAllBlogData() async {
-    CollectionReference reference = FirebaseFirestore.instance.collection('blog');
+    CollectionReference reference =
+        FirebaseFirestore.instance.collection('blog');
     try {
       var resBlog = await reference.get();
       List<BlogModel> list = [];
@@ -35,25 +37,30 @@ class Res {
             like: element.data()['like']));
       });
       return list;
-    } catch (e){
+    } catch (e) {
       print('///$e');
-
     }
   }
 
+  Future<List<SportsBlogModel>> getSportData() async {
+    CollectionReference reference =
+        FirebaseFirestore.instance.collection('sports');
 
-  // Future<Users> getUsrTojson(){
-  //
-  //   CollectionReference _reference =
-  //   FirebaseFirestore.instance.collection('user');
-  //   try{
-  //     var tojson=_reference.doc(_auth.currentUser.uid).get();
-  //     return JsonEncoder(Map<Users>)
-  //
-  //   }
-  //
-  // }
+    try {
+      var sportRes = await reference.get();
+      List<SportsBlogModel> sportsList = [];
 
-
-
+      sportRes.docs.forEach((element) {
+        element.data();
+        sportsList.add(SportsBlogModel(
+            author: element.data()['Author'],
+            tittle: element.data()['Tittle'],
+            description: element.data()['Description'],
+            like: element.data()['like']));
+      });
+      return sportsList;
+    } catch (e) {
+      print("////$e");
+    }
+  }
 }

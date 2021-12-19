@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoproject/Model/blog_model.dart';
 import 'package:demoproject/Model/blog_model.dart';
+import 'package:demoproject/Model/sports_blog_model.dart';
 import 'package:demoproject/Model/user_model.dart';
 import 'package:demoproject/Res/res_users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,15 +9,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BlogList extends StatefulWidget {
-  const BlogList({
-    Key key,
-    this.snapshot,
-    this.docId,
-    this.isSwitched,
-  }) : super(key: key);
+  const BlogList({Key key, this.snapshot, this.docId, this.isSwitched,this.blogModel, this.sportsBlogModel}) : super(key: key);
   final QueryDocumentSnapshot snapshot;
   final String docId;
   final bool isSwitched;
+  final BlogModel blogModel;
+  final SportsBlogModel sportsBlogModel;
 
   @override
   _BlogListState createState() => _BlogListState();
@@ -32,6 +30,7 @@ class _BlogListState extends State<BlogList> {
   final Res resUsers = Res();
 
   Users users;
+
 
   @override
   initState() {
@@ -55,13 +54,10 @@ class _BlogListState extends State<BlogList> {
 
   @override
   Widget build(BuildContext context) {
-    var likecount = widget.snapshot['like'];
-    var blogTittle = widget.snapshot['Tittle'];
-    var docId = widget.snapshot.id;
-    CollectionReference comment = FirebaseFirestore.instance
-        .collection('blog')
-        .doc(docId)
-        .collection('comments');
+    var likecount = widget.blogModel.like;
+    var blogTittle = widget.blogModel.tittle;
+    // var docId =widget.snapshot.id;
+    // CollectionReference comment = FirebaseFirestore.instance.collection('blog').doc(docId).collection('comments');
 
     return SingleChildScrollView(
       child: Column(
@@ -73,15 +69,15 @@ class _BlogListState extends State<BlogList> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.snapshot["Tittle"],
+                    widget.isSwitched?widget.blogModel.tittle:widget.sportsBlogModel.tittle,
                     style: TextStyle(fontSize: 18),
                   ),
                   Text(
-                    '@ #${widget.snapshot['Author']}',
+                    '@ #${widget.isSwitched?widget.blogModel.author:widget.sportsBlogModel.author}',
                     style: TextStyle(
                         color: Colors.grey, fontWeight: FontWeight.bold),
                   ),
-                  Text("${widget.snapshot['Description']}"),
+                  Text("${widget.isSwitched?widget.blogModel.description:widget.sportsBlogModel.description}"),
                   SizedBox(
                     height: 15,
                   ),
@@ -100,10 +96,10 @@ class _BlogListState extends State<BlogList> {
                               ),
                         onPressed: () {
                           if (likecount == 1) {
-                            like(docId);
+                            // like(docId);
                             likeBlogUpdate(blogTittle);
                           } else {
-                            dislike(docId);
+                            // dislike(docId);
                             dislikeBlogUpdate(blogTittle);
                           }
                         },
@@ -121,14 +117,14 @@ class _BlogListState extends State<BlogList> {
                   Container(
                     color: Colors.grey.shade100,
                     child: StreamBuilder<QuerySnapshot>(
-                      stream: comment.orderBy('time and data ').snapshots(),
+                      // stream: comment.orderBy('time and data ').snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return Text("Something went wrong");
                         }
                         if (snapshot.hasData) {
                           var myList = snapshot.data.docs.length;
-                          return buildListView(myList, snapshot, users);
+                          return buildListView(myList, snapshot, users );
                         }
                         return Center(child: CircularProgressIndicator());
                       },
@@ -142,7 +138,7 @@ class _BlogListState extends State<BlogList> {
                       hintText: 'Write Your Fist Comment',
                       suffixIcon: IconButton(
                         onPressed: () {
-                          onCommentSubmit(docId);
+                          // onCommentSubmit(docId);
                         },
                         icon: Icon(Icons.send),
                       ),
@@ -156,9 +152,8 @@ class _BlogListState extends State<BlogList> {
       ),
     );
   }
-
-  ListView buildListView(
-      int myList, AsyncSnapshot<QuerySnapshot> snapshot, Users users) {
+/// comments section///
+  ListView buildListView(int myList, AsyncSnapshot<QuerySnapshot> snapshot, Users users, ) {
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -179,7 +174,7 @@ class _BlogListState extends State<BlogList> {
                         itemCount: myList,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            title: Text(widget.snapshot["Author"]),
+                            title: Text(snapshot.data.docs[index]['Author']),
                             subtitle:
                                 Text(snapshot.data.docs[index]['comments']),
                             leading: Text(users.image),

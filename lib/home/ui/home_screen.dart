@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoproject/Model/blog_model.dart';
+import 'package:demoproject/Model/sports_blog_model.dart';
 import 'package:demoproject/Model/user_model.dart';
 import 'package:demoproject/Res/res_users.dart';
 import 'package:demoproject/utils/color_constants.dart';
@@ -19,45 +20,41 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   TextEditingController commentController = TextEditingController();
 
-  CollectionReference blog = FirebaseFirestore.instance.collection('blog');
-  var documentId = FirebaseAuth.instance.currentUser.uid;
-
-  CollectionReference sports = FirebaseFirestore.instance.collection('sports');
+  // CollectionReference blog = FirebaseFirestore.instance.collection('blog');
+  // var documentId = FirebaseAuth.instance.currentUser.uid;
+  //
+  // CollectionReference sports = FirebaseFirestore.instance.collection('sports');
 
   bool isSwitched = false;
 
   final Res resUsers = Res();
+  List<SportsBlogModel> sportsBlog;
+
 
   List<BlogModel> blogModel;
-// List  list=[];
-//
-//   BlogModel model;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     setBlogData();
+    setSportsData();
     // tojson();
   }
 
+  /// sports Model data
+  Future<void> setSportsData() async {
+    sportsBlog = await resUsers.getSportData();
+    setState(() {});
+  }
 
-  //
-  //  tojson()async{
-  // final jsonadata=   await model.toJson();
-  // print("////$jsonadata");
-  //
-  // list.add(jsonadata);
-  // print(list);
-  //  }
-
-
-
-
+  /// Blog model data
   Future<void> setBlogData() async {
     blogModel = await resUsers.getAllBlogData();
     setState(() {});
   }
 
+  ///Filter switch function
   void toggleSwitch(bool value) {
     setState(() {
       isSwitched = value;
@@ -67,7 +64,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
           backgroundColor: ColorConstants.red.shade300,
@@ -88,40 +84,45 @@ class _HomeState extends State<Home> {
           ),
           drawer: CustomDrawer(),
           body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                  child: StreamBuilder<QuerySnapshot>(
-                      stream: isSwitched ? sports.snapshots() : blog.snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Text("Something went wrong");
-                        }
-                        if (snapshot.hasData) {
-                          var data = snapshot.data.docs.length;
-                          return Expanded(
-                            child: ListView.builder(
-                              itemCount: blogModel?.length??0,
-                              itemBuilder: (context, index) {
-                                final docId = snapshot.data.docs[index].id;
-                                return Column(
-                                  children: [
-                                    BlogList(
-                                      snapshot: snapshot.data.docs[index],
-                                      docId: docId,
-                                      isSwitched: isSwitched,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Container(
+                //     child: StreamBuilder<QuerySnapshot>(
+                //         stream: isSwitched ? sports.snapshots() : blog.snapshots(),
+                //         builder: (context, snapshot) {
+                //           if (snapshot.hasError) {
+                //             return Text("Something went wrong");
+                //           }
+                //           if (snapshot.hasData) {
+                //             var data = snapshot.data.docs.length;
+                //             return
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: isSwitched?sportsBlog?.length??0:blogModel?.length??0,
+                    itemBuilder: (context, index) {
+                      // final docId = snapshot.data.docs[index].id;
+                      return Column(
+                        children: [
+                          BlogList(
+                            // snapshot: snapshot.data.docs[index],
+                            // docId: docId,
+                            isSwitched: isSwitched,
+                            blogModel: blogModel[index],
+                            sportsBlogModel: sportsBlog[index],
 
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          );
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      }))
-            ],
-          )),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                )
+              ]
+            // }
+            //             return Center(child: CircularProgressIndicator());
+            //           }))
+            // ],
+          )
+      ),
     );
   }
 }
