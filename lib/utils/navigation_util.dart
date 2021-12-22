@@ -1,5 +1,6 @@
 import 'package:demoproject/Auth/Login/ui/login_screen.dart';
 import 'package:demoproject/Auth/forget_password/ui/forget_pass.dart';
+import 'package:demoproject/Auth/phoneLogin/loginUsingPhone.dart';
 import 'package:demoproject/Auth/signup/ui/sign_up_screen.dart';
 import 'package:demoproject/home/ui/home_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +13,7 @@ class NavigationUtil {
     Map<String, dynamic> arg = settings.arguments;
     switch (settings.name) {
       case login:
-        return CupertinoPageRoute(builder: (context) => Home());
+        return CupertinoPageRoute(builder: (context) => Home(user: arg['data'],));
       case signup:
         return CupertinoPageRoute(
           builder: (context) => SignUp(),
@@ -25,7 +26,10 @@ class NavigationUtil {
         return CupertinoPageRoute(
           builder: (context) => Login(),
         );
-
+      case phonesignup:
+        return CupertinoPageRoute(
+          builder: (context) => PhoneAuthPage(),
+        );
       default:
         return _errorRoute("Coming soon");
     }

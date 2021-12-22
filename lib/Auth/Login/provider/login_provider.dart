@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class LoginProvider extends ChangeNotifier {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   String _uid;
   String _email;
   String _name;
@@ -15,7 +18,7 @@ class LoginProvider extends ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<bool> loginUser(
-      String emailcontroller, String passwordcontroller) async {
+      String emailcontroller, String passwordcontroller, GlobalKey<ScaffoldState> _scaffoldKey) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: emailcontroller, password: passwordcontroller);
@@ -29,7 +32,12 @@ class LoginProvider extends ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
+      showInSnackBar('User Does Not exist in our records', _scaffoldKey);
       return false;
     }
+  }
+
+  void showInSnackBar(String value, GlobalKey<ScaffoldState> key) {
+    key.currentState.showSnackBar(new SnackBar(content: new Text(value)));
   }
 }

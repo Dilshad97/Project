@@ -5,6 +5,7 @@ import 'package:demoproject/utils/navigation_const.dart';
 import 'package:demoproject/utils/navigation_util.dart';
 import 'package:demoproject/widgets/container.dart';
 import 'package:demoproject/widgets/textfield_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,22 @@ class _LoginState extends State<Login> {
     Firebase.initializeApp().whenComplete(() => print("///completed"));
     // TODO: implement initState
     super.initState();
+  }
+
+  bool login =false;
+  bool loading = false;
+
+  void _onLoading() {
+    setState(() {
+      loading = true;
+      new Future.delayed(new Duration(seconds: 1), _login);
+    });
+  }
+
+  Future _login() async {
+    setState(() {
+      loading = true;
+    });
   }
 
   @override
@@ -73,17 +90,17 @@ class _LoginState extends State<Login> {
                                 fontWeight: FontWeight.bold)),
 
                         /// Login TextFiend
-                        _loginTextField(),
+                       login?_loginUsingPhone(): _loginTextField(),
                         SizedBox(
                           height: 15,
                         ),
 
                         /// login Button
+
                         _loginButton(context, height, width),
                         SizedBox(
                           height: 15,
                         ),
-
                         ///forget password
                         _foregtPassButton(),
                         SizedBox(
@@ -107,7 +124,6 @@ class _LoginState extends State<Login> {
                         SizedBox(
                           height: 5,
                         ),
-
                         /// register button
                         _registerButton(height, width, context)
                       ],
@@ -141,28 +157,67 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _loginButton(BuildContext context, double height, double width) {
-    return InkWell(
-      onTap: () {
-        if (_formKey.currentState.validate()) {
-          return Methods().loginUser(
-              emailcontroller.text, passwordcontroller.text, context);
-        } else {
-          return showInSnackBar("Invalid Email/Password");
-        }
-      },
-      child: _widgetContainer(
-        height / 1.4,
-        width,
-        _widgetText(
-            'Login',
-            TextStyle(
-              color: Colors.white,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            )),
-      ),
+
+
+  Widget _loginUsingPhone(){
+
+    return Column(
+      children: [
+        CustomTextfield(
+          isObscureText: false,
+          controller: emailcontroller,
+          hintName: 'Phone',
+          inputType: TextInputType.text,
+        ),
+        CustomTextfield(
+          isObscureText: true,
+          controller: passwordcontroller,
+          hintName: 'Password',
+          inputType: TextInputType.text,
+        ),
+      ],
     );
+
+  }
+
+
+
+  Widget _loginButton(BuildContext context, double height, double width) {
+    return loading
+        ? CircularProgressIndicator()
+        : InkWell(
+            onTap: () async {
+              setState(() {
+                loading = true;
+              });
+
+              await loginSubmit();
+              setState(() {
+                loading = false;
+              });
+              showInSnackBar("Invalid Email/Password ");
+            },
+            child: _widgetContainer(
+              height / 1.4,
+              width,
+              _widgetText(
+                  'Login',
+                  TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  )),
+            ),
+          );
+  }
+
+  loginSubmit() {
+    if (_formKey.currentState.validate()) {
+      _onLoading();
+      return Methods().loginUser(
+          emailcontroller.text, passwordcontroller.text, context, _scaffoldKey);
+    } else
+      return showInSnackBar("Invalid Email/Password ");
   }
 
   Widget _foregtPassButton() {
@@ -177,7 +232,10 @@ class _LoginState extends State<Login> {
               _widgetText('Forget Password ||', TextStyle(color: Colors.blue)),
         ),
         GestureDetector(
-            onTap: () {},
+            onTap: () {
+              locator<NavigationUtil>().push(context, phonesignup);
+
+            },
             child: _widgetText(' OTP Login', TextStyle(color: Colors.blue))),
       ],
     );

@@ -34,8 +34,15 @@ class CustomTextfield extends StatelessWidget {
             }
             if (hintName == 'Email' && !validateEmail(value)) {
               return ' Enter valid email ';
-            } else
+            }
+            else  if(hintName=='Password'&& value.length!=6){
+              return 'Password invalid';
+
+            }
+
+            else
               return null;
+
           },
           obscureText: isObscureText,
           enabled: isEnable,

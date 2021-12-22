@@ -182,7 +182,7 @@ class _BlogListState extends State<BlogList> {
                             title: Text(widget.snapshot["Author"]),
                             subtitle:
                                 Text(snapshot.data.docs[index]['comments']),
-                            leading: Text(users.image),
+                            // leading: Text(users.image),
                           );
                         },
                         separatorBuilder: (context, index) {
