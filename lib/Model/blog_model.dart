@@ -4,9 +4,8 @@ class BlogModel {
   String tittle;
   String catogory;
   int like;
-   String id;
 
-  BlogModel({this.author, this.description, this.tittle, this.catogory, this.like, this.id});
+  BlogModel({this.author, this.description, this.tittle, this.catogory, this.like});
 
   BlogModel.fromJson(Map<String, dynamic> json) {
     author = json['Author'];
@@ -14,7 +13,6 @@ class BlogModel {
     tittle = json['Tittle'];
     catogory = json['catogory'];
     like = json['like'];
-    id= json['id'];
   }
 
   Map<String, dynamic> toJson() {

@@ -34,8 +34,6 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   like_button:
-  pinput:
-  otp_text_field:
 
 
 dev_dependencies:
